@@ -1,8 +1,11 @@
 package com.algaworks.algafood.auth;
 
+import java.util.Arrays;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -11,12 +14,13 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.A
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
-import org.springframework.security.oauth2.provider.token.TokenStore;
-import org.springframework.security.oauth2.provider.token.store.redis.RedisTokenStore;
+import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 
 @Configuration
 @EnableAuthorizationServer
 public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdapter {
+
+	private final List<String> COMPLEMENTO_CHAVE = Arrays.asList("a","b","c","d","e","f","g","h","i","j","l","m","n","o","p","q","r","t","u","v","x","z","w","y","k");
 	
 	@Autowired
 	private PasswordEncoder passwordEncoder;
@@ -26,9 +30,6 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 	
 	@Autowired
 	private UserDetailsService userDetailService;
-	
-	@Autowired
-	private RedisConnectionFactory redisConnectionFactory;
 	
 	@Override
 	public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
@@ -72,11 +73,22 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 		endpoints
 			.authenticationManager(authenticationManager)
 			.userDetailsService(userDetailService)
-			.tokenStore(redisTokenStore());
+			.accessTokenConverter(jwtAcessTokenConverter());
 	}
 	
-	private TokenStore redisTokenStore() {
-		return new RedisTokenStore(redisConnectionFactory);
+	@Bean
+	public JwtAccessTokenConverter jwtAcessTokenConverter() {
+		JwtAccessTokenConverter jwtAcessAccessTokenConverter = new JwtAccessTokenConverter();
+		jwtAcessAccessTokenConverter.setSigningKey(montaChave("mailsonfp"));
 		
+		return jwtAcessAccessTokenConverter;
+	}
+	
+	private String montaChave(String chaveInicial) {
+		StringBuilder chaveRetorno = new StringBuilder(chaveInicial);
+		
+		COMPLEMENTO_CHAVE.forEach(l -> chaveRetorno.append(l));
+				
+		return chaveRetorno.toString();
 	}
 }
