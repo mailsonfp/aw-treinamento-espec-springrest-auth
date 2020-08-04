@@ -13,26 +13,20 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 
 @Entity
-public class Usuario {
+public class Grupo {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-
+	
 	@Column(nullable = false)
 	private String nome;
 	
-	@Column(nullable = false)
-	private String email;
-	
-	@Column(nullable = false)
-	private String senha;
-		
 	@ManyToMany
-	@JoinTable(name = "usuario_grupo", joinColumns = @JoinColumn(name = "usuario_id"),
-			inverseJoinColumns = @JoinColumn(name = "grupo_id"))
-	private Set<Grupo> grupos = new HashSet<>();
-	
+	@JoinTable(name = "grupo_permissao", joinColumns = @JoinColumn(name = "grupo_id"),
+	inverseJoinColumns = @JoinColumn(name = "permissao_id"))
+	private Set<Permissao> permissoes = new HashSet<>();
+
 	public Long getId() {
 		return id;
 	}
@@ -49,28 +43,12 @@ public class Usuario {
 		this.nome = nome;
 	}
 
-	public String getEmail() {
-		return email;
+	public Set<Permissao> getPermissoes() {
+		return permissoes;
 	}
 
-	public void setEmail(String email) {
-		this.email = email;
-	}
-
-	public String getSenha() {
-		return senha;
-	}
-
-	public void setSenha(String senha) {
-		this.senha = senha;
-	}
-
-	public Set<Grupo> getGrupos() {
-		return grupos;
-	}
-
-	public void setGrupos(Set<Grupo> grupos) {
-		this.grupos = grupos;
+	public void setPermissoes(Set<Permissao> permissoes) {
+		this.permissoes = permissoes;
 	}
 	
 	@Override
@@ -89,7 +67,7 @@ public class Usuario {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Usuario other = (Usuario) obj;
+		Grupo other = (Grupo) obj;
 		if (id == null) {
 			if (other.id != null)
 				return false;
