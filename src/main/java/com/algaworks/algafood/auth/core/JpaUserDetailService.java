@@ -36,4 +36,5 @@ public class JpaUserDetailService implements UserDetailsService {
 					.map(permissao -> new SimpleGrantedAuthority(permissao.getNome().toUpperCase()))
 					.collect(Collectors.toSet());
 	}
+	
 }
