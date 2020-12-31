@@ -15,7 +15,7 @@
 	<description>Authorization Server</description>
 
 	<properties>
-		<java.version>14</java.version>
+		<java.version>15</java.version>
 		<spring-security-oauth2.version>2.3.7.RELEASE</spring-security-oauth2.version>
 		<spring-security-jwt.version>1.0.11.RELEASE</spring-security-jwt.version>
 	</properties>
